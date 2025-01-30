@@ -7,6 +7,21 @@ document.addEventListener("DOMContentLoaded", function () {
     calendarContainer.style.width = "90vw";
     document.body.appendChild(calendarContainer);
 
+    // 🔥 Firebase Configuration (Replace with your actual keys)
+const firebaseConfig = {
+    apiKey: "AIzaSyB0CHIZBpFI4RzE5XlFH3VS0vffgfyaJwU",
+    authDomain: "two5calendar.firebaseapp.com",
+    projectId: "two5calendar",
+    storageBucket: "two5calendar.appspot.com",
+    messagingSenderId: "148397724051",
+    appId: "1:148397724051:web:4102962402993044a89866"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+
     const today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();

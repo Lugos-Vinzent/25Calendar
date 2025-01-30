@@ -4,33 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Calendar</title>
-    
-    <!-- React and ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- FullCalendar Core and DayGrid -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales-all.min.js"></script>
-    
-    <!-- Style -->
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
         }
-        #calendar {
-            max-width: 900px;
-            margin: 40px auto;
+        .calendar {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        .calendar th, .calendar td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .calendar th {
+            background: #f4f4f4;
+        }
+        .calendar td {
+            height: 80px;
         }
     </style>
 </head>
 <body>
     <h1>My Calendar</h1>
-    <div id="root"></div>
+    <table class="calendar">
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body">
+            <!-- JavaScript will insert days here -->
+        </tbody>
+    </table>
 
-    <!-- Load our React app -->
     <script src="app.js"></script>
 </body>
 </html>

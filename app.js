@@ -32,25 +32,50 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(calendarContainer);
     }
 
+    // Function to Show Errors
+    function showError(error) {
+        alert("Error: " + error.message);
+    }
+
     // Sign Up Function
     signupBtn.addEventListener("click", () => {
-        auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (email === "" || password === "") {
+            showError({ message: "Please enter an email and password." });
+            return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
             .then(userCredential => {
                 console.log("User signed up:", userCredential.user);
+                alert("Signup successful! You are now logged in.");
             })
             .catch(error => {
                 console.error("Signup error:", error.message);
+                showError(error);
             });
     });
 
     // Login Function
     loginBtn.addEventListener("click", () => {
-        auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (email === "" || password === "") {
+            showError({ message: "Please enter an email and password." });
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(email, password)
             .then(userCredential => {
                 console.log("User logged in:", userCredential.user);
+                alert("Login successful!");
             })
             .catch(error => {
                 console.error("Login error:", error.message);
+                showError(error);
             });
     });
 
@@ -58,6 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
     logoutBtn.addEventListener("click", () => {
         auth.signOut().then(() => {
             console.log("User logged out");
+            alert("You have been logged out.");
+        }).catch(error => {
+            console.error("Logout error:", error.message);
+            showError(error);
         });
     });
 

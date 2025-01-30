@@ -21,6 +21,60 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
+    // Select elements
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const signupBtn = document.getElementById("signup-btn");
+const loginBtn = document.getElementById("login-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const authContainer = document.getElementById("auth-container");
+const calendarContainer = document.getElementById("calendar-container");
+
+// Sign Up Function
+signupBtn.addEventListener("click", () => {
+    auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
+        .then(userCredential => {
+            console.log("User signed up:", userCredential.user);
+        })
+        .catch(error => {
+            console.error("Signup error:", error.message);
+        });
+});
+
+// Login Function
+loginBtn.addEventListener("click", () => {
+    auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
+        .then(userCredential => {
+            console.log("User logged in:", userCredential.user);
+        })
+        .catch(error => {
+            console.error("Login error:", error.message);
+        });
+});
+
+// Logout Function
+logoutBtn.addEventListener("click", () => {
+    auth.signOut().then(() => {
+        console.log("User logged out");
+    });
+});
+
+// Detect login state changes
+auth.onAuthStateChanged(user => {
+    if (user) {
+        console.log("User logged in:", user.email);
+        authContainer.style.display = "none";
+        calendarContainer.style.display = "block";
+        logoutBtn.style.display = "block";
+    } else {
+        console.log("No user logged in.");
+        authContainer.style.display = "block";
+        calendarContainer.style.display = "none";
+        logoutBtn.style.display = "none";
+    }
+});
+
+
 
     const today = new Date();
     let currentYear = today.getFullYear();

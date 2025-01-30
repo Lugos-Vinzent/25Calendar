@@ -12,11 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
 
     // Select elements
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const signupBtn = document.getElementById("signup-btn");
     const loginBtn = document.getElementById("login-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const authContainer = document.getElementById("auth-container");
@@ -32,50 +30,14 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(calendarContainer);
     }
 
-    // Function to Show Errors
-    function showError(error) {
-        alert("Error: " + error.message);
-    }
-
-    // Sign Up Function
-    signupBtn.addEventListener("click", () => {
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-
-        if (email === "" || password === "") {
-            showError({ message: "Please enter an email and password." });
-            return;
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(userCredential => {
-                console.log("User signed up:", userCredential.user);
-                alert("Signup successful! You are now logged in.");
-            })
-            .catch(error => {
-                console.error("Signup error:", error.message);
-                showError(error);
-            });
-    });
-
-    // Login Function
+    // Google Sign-In Function
     loginBtn.addEventListener("click", () => {
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-
-        if (email === "" || password === "") {
-            showError({ message: "Please enter an email and password." });
-            return;
-        }
-
-        auth.signInWithEmailAndPassword(email, password)
-            .then(userCredential => {
-                console.log("User logged in:", userCredential.user);
-                alert("Login successful!");
+        auth.signInWithPopup(provider)
+            .then(result => {
+                console.log("User logged in with Google:", result.user);
             })
             .catch(error => {
-                console.error("Login error:", error.message);
-                showError(error);
+                console.error("Google Sign-In error:", error.message);
             });
     });
 
@@ -83,10 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
     logoutBtn.addEventListener("click", () => {
         auth.signOut().then(() => {
             console.log("User logged out");
-            alert("You have been logged out.");
-        }).catch(error => {
-            console.error("Logout error:", error.message);
-            showError(error);
         });
     });
 
@@ -110,9 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
 
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    
     function generateCalendar(year, month) {
         calendarContainer.innerHTML = "";
 

@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const auth = firebase.auth();
     const provider = new firebase.auth.GoogleAuthProvider();
 
+    // Add Google Sign-In Scopes
+    provider.addScope("email");
+    provider.addScope("profile");
+
     // Select elements
     const loginBtn = document.getElementById("login-btn");
     const logoutBtn = document.getElementById("logout-btn");
@@ -30,15 +34,18 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(calendarContainer);
     }
 
-    // Google Sign-In Function
+    // Google Sign-In Function (Using Redirect to Avoid Popup Blocks)
     loginBtn.addEventListener("click", () => {
-        auth.signInWithPopup(provider)
-            .then(result => {
-                console.log("User logged in with Google:", result.user);
-            })
-            .catch(error => {
-                console.error("Google Sign-In error:", error.message);
-            });
+        firebase.auth().signInWithRedirect(provider);
+    });
+
+    // Handle Redirect Result (Login Callback)
+    firebase.auth().getRedirectResult().then(result => {
+        if (result.user) {
+            console.log("User logged in with Google:", result.user);
+        }
+    }).catch(error => {
+        console.error("Google Sign-In error:", error.message);
     });
 
     // Logout Function

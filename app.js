@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     const calendarContainer = document.createElement("div");
     calendarContainer.id = "calendar-container";
-    calendarContainer.style.display = "flex";
-    calendarContainer.style.overflowX = "auto";
-    calendarContainer.style.whiteSpace = "nowrap";
+    calendarContainer.style.display = "block";
+    calendarContainer.style.overflowY = "auto";
+    calendarContainer.style.height = "600px";
     document.body.appendChild(calendarContainer);
 
     const today = new Date();
@@ -15,11 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function generateCalendar(year, month) {
         const calendarWrapper = document.createElement("div");
         calendarWrapper.classList.add("calendar-wrapper");
-        calendarWrapper.style.display = "inline-block";
-        calendarWrapper.style.marginRight = "20px";
-        calendarWrapper.style.verticalAlign = "top";
-        calendarWrapper.style.minWidth = "300px";
-
+        calendarWrapper.style.marginBottom = "20px";
+        
         const monthDisplay = document.createElement("h2");
         monthDisplay.innerText = `${monthNames[month]} ${year}`;
         calendarWrapper.appendChild(monthDisplay);
@@ -42,13 +39,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 cell.style.textAlign = "center";
                 cell.style.width = "40px";
                 cell.style.height = "40px";
-
+                
+                let dayNumber = "";
                 if (i === 0 && j < firstDay) {
-                    cell.innerHTML = "";
+                    dayNumber = new Date(year, month, -(firstDay - j - 1)).getDate();
+                    cell.style.color = "#aaa"; // Previous month days
                 } else if (day > daysInMonth) {
-                    cell.innerHTML = "";
+                    dayNumber = new Date(year, month + 1, day - daysInMonth).getDate();
+                    cell.style.color = "#aaa"; // Next month days
+                    day++;
                 } else {
-                    cell.innerHTML = day;
+                    dayNumber = day;
                     cell.dataset.date = `${year}-${month + 1}-${day}`;
                     
                     if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
@@ -73,10 +74,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     day++;
                 }
+                
+                cell.innerHTML = dayNumber;
                 row.appendChild(cell);
             }
             table.appendChild(row);
-            if (day > daysInMonth) break;
         }
 
         calendarWrapper.appendChild(table);
@@ -85,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function generateMultipleMonths() {
         calendarContainer.innerHTML = "";
-        for (let i = -2; i <= 2; i++) {
+        for (let i = -1; i <= 1; i++) {
             let newMonth = currentMonth + i;
             let newYear = currentYear;
             if (newMonth < 0) {
@@ -100,9 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.addEventListener("wheel", function (event) {
-        if (event.deltaX > 0) {
+        event.preventDefault(); // Prevent page reload on mobile
+        if (event.deltaY > 0) {
             currentMonth++;
-        } else if (event.deltaX < 0) {
+        } else if (event.deltaY < 0) {
             currentMonth--;
         }
         if (currentMonth < 0) {
@@ -113,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
             currentYear++;
         }
         generateMultipleMonths();
-    });
+    }, { passive: false });
     
     document.addEventListener("click", function (event) {
         if (!event.target.classList.contains("calendar-cell")) {

@@ -1,80 +1,81 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const calendarContainer = document.createElement("div");
-    calendarContainer.id = "calendar-container";
-    calendarContainer.style.display = "block";
-    calendarContainer.style.overflowY = "auto";
-    calendarContainer.style.height = "90vh";
-    calendarContainer.style.width = "90vw";
-    document.body.appendChild(calendarContainer);
-
     // 🔥 Firebase Configuration (Replace with your actual keys)
-const firebaseConfig = {
-    apiKey: "AIzaSyB0CHIZBpFI4RzE5XlFH3VS0vffgfyaJwU",
-    authDomain: "two5calendar.firebaseapp.com",
-    projectId: "two5calendar",
-    storageBucket: "two5calendar.appspot.com",
-    messagingSenderId: "148397724051",
-    appId: "1:148397724051:web:4102962402993044a89866"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyB0CHIZBpFI4RzE5XlFH3VS0vffgfyaJwU",
+        authDomain: "two5calendar.firebaseapp.com",
+        projectId: "two5calendar",
+        storageBucket: "two5calendar.appspot.com",
+        messagingSenderId: "148397724051",
+        appId: "1:148397724051:web:4102962402993044a89866"
+    };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
     // Select elements
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const signupBtn = document.getElementById("signup-btn");
-const loginBtn = document.getElementById("login-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const authContainer = document.getElementById("auth-container");
-const calendarContainer = document.getElementById("calendar-container");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const signupBtn = document.getElementById("signup-btn");
+    const loginBtn = document.getElementById("login-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const authContainer = document.getElementById("auth-container");
+    let calendarContainer = document.getElementById("calendar-container");
 
-// Sign Up Function
-signupBtn.addEventListener("click", () => {
-    auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
-        .then(userCredential => {
-            console.log("User signed up:", userCredential.user);
-        })
-        .catch(error => {
-            console.error("Signup error:", error.message);
-        });
-});
-
-// Login Function
-loginBtn.addEventListener("click", () => {
-    auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
-        .then(userCredential => {
-            console.log("User logged in:", userCredential.user);
-        })
-        .catch(error => {
-            console.error("Login error:", error.message);
-        });
-});
-
-// Logout Function
-logoutBtn.addEventListener("click", () => {
-    auth.signOut().then(() => {
-        console.log("User logged out");
-    });
-});
-
-// Detect login state changes
-auth.onAuthStateChanged(user => {
-    if (user) {
-        console.log("User logged in:", user.email);
-        authContainer.style.display = "none";
-        calendarContainer.style.display = "block";
-        logoutBtn.style.display = "block";
-    } else {
-        console.log("No user logged in.");
-        authContainer.style.display = "block";
-        calendarContainer.style.display = "none";
-        logoutBtn.style.display = "none";
+    if (!calendarContainer) {
+        calendarContainer = document.createElement("div");
+        calendarContainer.id = "calendar-container";
+        calendarContainer.style.display = "none"; // Initially hidden until login
+        calendarContainer.style.overflowY = "auto";
+        calendarContainer.style.height = "100vh";
+        calendarContainer.style.width = "100vw";
+        document.body.appendChild(calendarContainer);
     }
-});
 
+    // Sign Up Function
+    signupBtn.addEventListener("click", () => {
+        auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
+            .then(userCredential => {
+                console.log("User signed up:", userCredential.user);
+            })
+            .catch(error => {
+                console.error("Signup error:", error.message);
+            });
+    });
 
+    // Login Function
+    loginBtn.addEventListener("click", () => {
+        auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
+            .then(userCredential => {
+                console.log("User logged in:", userCredential.user);
+            })
+            .catch(error => {
+                console.error("Login error:", error.message);
+            });
+    });
+
+    // Logout Function
+    logoutBtn.addEventListener("click", () => {
+        auth.signOut().then(() => {
+            console.log("User logged out");
+        });
+    });
+
+    // Detect login state changes
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            console.log("User logged in:", user.email);
+            authContainer.style.display = "none";
+            calendarContainer.style.display = "block";
+            logoutBtn.style.display = "block";
+            generateCalendar(currentYear, currentMonth);
+        } else {
+            console.log("No user logged in.");
+            authContainer.style.display = "block";
+            calendarContainer.style.display = "none";
+            logoutBtn.style.display = "none";
+        }
+    });
 
     const today = new Date();
     let currentYear = today.getFullYear();
@@ -88,8 +89,8 @@ auth.onAuthStateChanged(user => {
 
         const calendarWrapper = document.createElement("div");
         calendarWrapper.classList.add("calendar-wrapper");
-        calendarWrapper.style.width = "90vw";
-        calendarWrapper.style.height = "90vh";
+        calendarWrapper.style.width = "100vw";
+        calendarWrapper.style.height = "100vh";
         calendarWrapper.style.display = "flex";
         calendarWrapper.style.flexDirection = "column";
         calendarWrapper.style.alignItems = "center";
@@ -100,8 +101,8 @@ auth.onAuthStateChanged(user => {
 
         const table = document.createElement("table");
         table.classList.add("calendar");
-        table.style.width = "90%";
-        table.style.height = "90%";
+        table.style.width = "100%";
+        table.style.height = "100%";
 
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -197,6 +198,4 @@ auth.onAuthStateChanged(user => {
             });
         }
     });
-
-    generateCalendar(currentYear, currentMonth);
 });

@@ -135,27 +135,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     cellContent.innerHTML = `${weekDays[j]} ${day}`;
                     cell.appendChild(cellContent);
                     cell.dataset.date = `${year}-${month + 1}-${day}`;
-                    
-                    if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
-                        cell.classList.add("today");
-                        cell.style.backgroundColor = "#ffdd57";
-                    }
-                    
-                    cell.addEventListener("click", function () {
-                        document.querySelectorAll(".calendar-cell").forEach(cell => {
-                            if (!cell.classList.contains("today")) {
-                                cell.style.backgroundColor = "";
-                            } else {
-                                cell.style.backgroundColor = "#ffdd57";
-                            }
-                        });
-                        if (this.classList.contains("today")) {
-                            this.style.backgroundColor = "#ffa500";
-                        } else {
-                            this.style.backgroundColor = "#57a0ff";
-                        }
-                    });
-                    
                     day++;
                 }
                 row.appendChild(cell);
@@ -184,18 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
             changeMonth(1);
         } else if (event.deltaY < 0) {
             changeMonth(-1);
-        }
-    });
-    
-    document.addEventListener("click", function (event) {
-        if (!event.target.classList.contains("calendar-cell")) {
-            document.querySelectorAll(".calendar-cell").forEach(cell => {
-                if (!cell.classList.contains("today")) {
-                    cell.style.backgroundColor = "";
-                } else {
-                    cell.style.backgroundColor = "#ffdd57";
-                }
-            });
         }
     });
 });

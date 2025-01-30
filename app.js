@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     calendarContainer.style.display = "block";
     calendarContainer.style.overflowY = "auto";
     calendarContainer.style.height = "100vh";
-    calendarContainer.style.whiteSpace = "nowrap";
+    calendarContainer.style.width = "100%";
     document.body.appendChild(calendarContainer);
 
     const today = new Date();
@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentMonth = today.getMonth();
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     
     function generateCalendar(year, month) {
         calendarContainer.innerHTML = "";
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const table = document.createElement("table");
         table.classList.add("calendar");
-        table.style.width = "80%";
+        table.style.width = "100%";
         table.style.height = "80%";
 
         const firstDay = new Date(year, month, 1).getDay();
@@ -45,16 +46,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 cell.classList.add("calendar-cell");
                 cell.style.padding = "10px";
                 cell.style.border = "1px solid #ddd";
-                cell.style.textAlign = "center";
+                cell.style.textAlign = "left";
                 cell.style.width = "14%";
                 cell.style.height = "14%";
+                cell.style.position = "relative";
+                
+                const cellContent = document.createElement("div");
+                cellContent.style.fontSize = "12px";
+                cellContent.style.position = "absolute";
+                cellContent.style.top = "5px";
+                cellContent.style.left = "5px";
                 
                 if (i === 0 && j < firstDay) {
                     cell.innerHTML = "";
                 } else if (day > daysInMonth) {
                     cell.innerHTML = "";
                 } else {
-                    cell.innerHTML = day;
+                    cellContent.innerHTML = `${weekDays[j]} ${day}`;
+                    cell.appendChild(cellContent);
                     cell.dataset.date = `${year}-${month + 1}-${day}`;
                     
                     if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {

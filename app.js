@@ -4,8 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
 
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthDisplay = document.createElement("h2");
+    monthDisplay.id = "month-display";
+    document.body.insertBefore(monthDisplay, calendarBody.parentNode);
+
     function generateCalendar(year, month) {
         calendarBody.innerHTML = "";
+        monthDisplay.innerText = `${monthNames[month]} ${year}`;
 
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -27,12 +33,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     cell.dataset.date = `${year}-${month + 1}-${day}`;
                     
                     if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                        cell.classList.add("today");
                         cell.style.backgroundColor = "#ffdd57"; // Highlight today's date
                     }
                     
                     cell.addEventListener("click", function () {
-                        document.querySelectorAll(".calendar-cell").forEach(cell => cell.style.backgroundColor = "");
-                        this.style.backgroundColor = "#57a0ff"; // Change clicked day color
+                        document.querySelectorAll(".calendar-cell").forEach(cell => {
+                            if (!cell.classList.contains("today")) {
+                                cell.style.backgroundColor = "";
+                            }
+                        });
+                        if (this.classList.contains("today")) {
+                            this.style.backgroundColor = "#ffa500"; // Orange when today is clicked
+                        } else {
+                            this.style.backgroundColor = "#57a0ff"; // Change clicked day color
+                        }
                     });
                     
                     day++;

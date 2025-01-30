@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const calendarWrapper = document.createElement("div");
         calendarWrapper.classList.add("calendar-wrapper");
-        calendarWrapper.style.width = "100vw";
-        calendarWrapper.style.height = "100vh";
+        calendarWrapper.style.width = "90vw";
+        calendarWrapper.style.height = "90vh";
         calendarWrapper.style.display = "flex";
         calendarWrapper.style.flexDirection = "column";
         calendarWrapper.style.alignItems = "center";

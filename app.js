@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     calendarContainer.id = "calendar-container";
     calendarContainer.style.display = "block";
     calendarContainer.style.overflowY = "auto";
-    calendarContainer.style.height = "100vh";
-    calendarContainer.style.width = "100vw";
+    calendarContainer.style.height = "90vh";
+    calendarContainer.style.width = "90vw";
     document.body.appendChild(calendarContainer);
 
     const today = new Date();

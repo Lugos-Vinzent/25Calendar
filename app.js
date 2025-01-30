@@ -2,20 +2,20 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 function CalendarApp() {
   React.useEffect(() => {
-    const calendarEl = document.getElementById("calendar");
+    const calendarEl = document.createElement("div");
+    calendarEl.id = "calendar";
+    document.getElementById("root").appendChild(calendarEl);
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [FullCalendar.DayGrid],
-      initialView: "dayGridMonth",
+      initialView: "dayGridMonth"
     });
 
     calendar.render();
   }, []);
 
   return (
-    <div className="container">
+    <div>
       <h1>My Calendar</h1>
-      <div id="calendar"></div>
     </div>
   );
 }

@@ -86,6 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".calendar-cell").forEach(cell => {
                 if (!cell.classList.contains("today")) {
                     cell.style.backgroundColor = "";
+                } else {
+                    cell.style.backgroundColor = "#ffdd57"; // Reset today to yellow
                 }
             });
         }

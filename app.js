@@ -1,17 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const calendarBody = document.getElementById("calendar-body");
+    const calendarContainer = document.createElement("div");
+    calendarContainer.id = "calendar-container";
+    calendarContainer.style.display = "flex";
+    calendarContainer.style.overflowX = "auto";
+    calendarContainer.style.whiteSpace = "nowrap";
+    document.body.appendChild(calendarContainer);
+
     const today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const monthDisplay = document.createElement("h2");
-    monthDisplay.id = "month-display";
-    document.body.insertBefore(monthDisplay, calendarBody.parentNode);
-
+    
     function generateCalendar(year, month) {
-        calendarBody.innerHTML = "";
+        const calendarWrapper = document.createElement("div");
+        calendarWrapper.classList.add("calendar-wrapper");
+        calendarWrapper.style.display = "inline-block";
+        calendarWrapper.style.marginRight = "20px";
+        calendarWrapper.style.verticalAlign = "top";
+        calendarWrapper.style.minWidth = "300px";
+
+        const monthDisplay = document.createElement("h2");
         monthDisplay.innerText = `${monthNames[month]} ${year}`;
+        calendarWrapper.appendChild(monthDisplay);
+
+        const table = document.createElement("table");
+        table.classList.add("calendar");
 
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -23,6 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
             for (let j = 0; j < 7; j++) {
                 let cell = document.createElement("td");
                 cell.classList.add("calendar-cell");
+                cell.style.padding = "10px";
+                cell.style.border = "1px solid #ddd";
+                cell.style.textAlign = "center";
+                cell.style.width = "40px";
+                cell.style.height = "40px";
 
                 if (i === 0 && j < firstDay) {
                     cell.innerHTML = "";
@@ -56,13 +75,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 row.appendChild(cell);
             }
-            calendarBody.appendChild(row);
+            table.appendChild(row);
             if (day > daysInMonth) break;
+        }
+
+        calendarWrapper.appendChild(table);
+        calendarContainer.appendChild(calendarWrapper);
+    }
+
+    function generateMultipleMonths() {
+        calendarContainer.innerHTML = "";
+        for (let i = -2; i <= 2; i++) {
+            let newMonth = currentMonth + i;
+            let newYear = currentYear;
+            if (newMonth < 0) {
+                newMonth += 12;
+                newYear--;
+            } else if (newMonth > 11) {
+                newMonth -= 12;
+                newYear++;
+            }
+            generateCalendar(newYear, newMonth);
         }
     }
 
-    function changeMonth(offset) {
-        currentMonth += offset;
+    document.addEventListener("wheel", function (event) {
+        if (event.deltaX > 0) {
+            currentMonth++;
+        } else if (event.deltaX < 0) {
+            currentMonth--;
+        }
         if (currentMonth < 0) {
             currentMonth = 11;
             currentYear--;
@@ -70,15 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
             currentMonth = 0;
             currentYear++;
         }
-        generateCalendar(currentYear, currentMonth);
-    }
-
-    document.addEventListener("wheel", function (event) {
-        if (event.deltaY > 0) {
-            changeMonth(1);
-        } else if (event.deltaY < 0) {
-            changeMonth(-1);
-        }
+        generateMultipleMonths();
     });
     
     document.addEventListener("click", function (event) {
@@ -93,5 +127,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    generateCalendar(currentYear, currentMonth);
+    generateMultipleMonths();
 });

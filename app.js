@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     calendarContainer.style.display = "block";
     calendarContainer.style.overflowY = "auto";
     calendarContainer.style.height = "100vh";
-    calendarContainer.style.width = "100%";
+    calendarContainer.style.width = "100vw";
     document.body.appendChild(calendarContainer);
 
     const today = new Date();
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const calendarWrapper = document.createElement("div");
         calendarWrapper.classList.add("calendar-wrapper");
-        calendarWrapper.style.width = "100%";
-        calendarWrapper.style.height = "100%";
+        calendarWrapper.style.width = "100vw";
+        calendarWrapper.style.height = "100vh";
         calendarWrapper.style.display = "flex";
         calendarWrapper.style.flexDirection = "column";
         calendarWrapper.style.alignItems = "center";
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const table = document.createElement("table");
         table.classList.add("calendar");
         table.style.width = "100%";
-        table.style.height = "80%";
+        table.style.height = "100%";
 
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();

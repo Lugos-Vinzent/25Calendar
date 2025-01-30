@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const table = document.createElement("table");
         table.classList.add("calendar");
-        table.style.width = "100%";
-        table.style.height = "100%";
+        table.style.width = "90%";
+        table.style.height = "90%";
 
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();

@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         document.querySelectorAll(".calendar-cell").forEach(cell => {
                             if (!cell.classList.contains("today")) {
                                 cell.style.backgroundColor = "";
+                            } else {
+                                cell.style.backgroundColor = "#ffdd57"; // Keep today yellow
                             }
                         });
                         if (this.classList.contains("today")) {
@@ -76,6 +78,16 @@ document.addEventListener("DOMContentLoaded", function () {
             changeMonth(1);
         } else if (event.deltaY < 0) {
             changeMonth(-1);
+        }
+    });
+    
+    document.addEventListener("click", function (event) {
+        if (!event.target.classList.contains("calendar-cell")) {
+            document.querySelectorAll(".calendar-cell").forEach(cell => {
+                if (!cell.classList.contains("today")) {
+                    cell.style.backgroundColor = "";
+                }
+            });
         }
     });
 

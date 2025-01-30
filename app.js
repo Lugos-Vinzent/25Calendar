@@ -1,23 +1,33 @@
-const root = ReactDOM.createRoot(document.getElementById("root"));
+document.addEventListener("DOMContentLoaded", function () {
+    function generateCalendar(year, month) {
+        const calendarBody = document.getElementById("calendar-body");
+        calendarBody.innerHTML = "";
 
-function CalendarApp() {
-  React.useEffect(() => {
-    const calendarEl = document.createElement("div");
-    calendarEl.id = "calendar";
-    document.getElementById("root").appendChild(calendarEl);
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let day = 1;
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: "dayGridMonth"
-    });
+        for (let i = 0; i < 6; i++) {
+            let row = document.createElement("tr");
 
-    calendar.render();
-  }, []);
+            for (let j = 0; j < 7; j++) {
+                let cell = document.createElement("td");
 
-  return (
-    <div>
-      <h1>My Calendar</h1>
-    </div>
-  );
-}
+                if (i === 0 && j < firstDay) {
+                    cell.innerHTML = "";
+                } else if (day > daysInMonth) {
+                    cell.innerHTML = "";
+                } else {
+                    cell.innerHTML = day;
+                    day++;
+                }
+                row.appendChild(cell);
+            }
+            calendarBody.appendChild(row);
+            if (day > daysInMonth) break;
+        }
+    }
 
-root.render(<CalendarApp />);
+    const today = new Date();
+    generateCalendar(today.getFullYear(), today.getMonth());
+});

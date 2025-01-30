@@ -3,96 +3,110 @@ document.addEventListener("DOMContentLoaded", function () {
     calendarContainer.id = "calendar-container";
     calendarContainer.style.display = "block";
     calendarContainer.style.overflowY = "auto";
-    calendarContainer.style.height = "600px";
+    calendarContainer.style.height = "100vh";
     calendarContainer.style.whiteSpace = "nowrap";
     document.body.appendChild(calendarContainer);
 
     const today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
-    let currentWeekStart = new Date(today.setDate(today.getDate() - today.getDay()));
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    function generateCalendarWeek(startDate) {
+    function generateCalendar(year, month) {
+        calendarContainer.innerHTML = "";
+
         const calendarWrapper = document.createElement("div");
         calendarWrapper.classList.add("calendar-wrapper");
-        calendarWrapper.style.display = "inline-block";
-        calendarWrapper.style.marginRight = "10px";
-        calendarWrapper.style.verticalAlign = "top";
-        calendarWrapper.style.minWidth = "350px";
+        calendarWrapper.style.width = "100%";
+        calendarWrapper.style.height = "100%";
+        calendarWrapper.style.display = "flex";
+        calendarWrapper.style.flexDirection = "column";
+        calendarWrapper.style.alignItems = "center";
         
         const monthDisplay = document.createElement("h2");
-        monthDisplay.innerText = `${monthNames[startDate.getMonth()]} ${startDate.getFullYear()}`;
-        monthDisplay.style.writingMode = "vertical-rl";
-        monthDisplay.style.textAlign = "center";
-        monthDisplay.style.margin = "10px";
+        monthDisplay.innerText = `${monthNames[month]} ${year}`;
         calendarWrapper.appendChild(monthDisplay);
 
         const table = document.createElement("table");
         table.classList.add("calendar");
-        let row = document.createElement("tr");
+        table.style.width = "80%";
+        table.style.height = "80%";
 
-        for (let i = 0; i < 7; i++) {
-            let cell = document.createElement("td");
-            cell.classList.add("calendar-cell");
-            cell.style.padding = "10px";
-            cell.style.border = "1px solid #ddd";
-            cell.style.textAlign = "center";
-            cell.style.width = "50px";
-            cell.style.height = "50px";
-            
-            let date = new Date(startDate);
-            date.setDate(startDate.getDate() + i);
-            cell.innerHTML = date.getDate();
-            cell.dataset.date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-            
-            if (date.toDateString() === new Date().toDateString()) {
-                cell.classList.add("today");
-                cell.style.backgroundColor = "#ffdd57";
-            }
-            
-            cell.addEventListener("click", function () {
-                document.querySelectorAll(".calendar-cell").forEach(cell => {
-                    if (!cell.classList.contains("today")) {
-                        cell.style.backgroundColor = "";
-                    } else {
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let day = 1;
+
+        for (let i = 0; i < 6; i++) {
+            let row = document.createElement("tr");
+
+            for (let j = 0; j < 7; j++) {
+                let cell = document.createElement("td");
+                cell.classList.add("calendar-cell");
+                cell.style.padding = "10px";
+                cell.style.border = "1px solid #ddd";
+                cell.style.textAlign = "center";
+                cell.style.width = "14%";
+                cell.style.height = "14%";
+                
+                if (i === 0 && j < firstDay) {
+                    cell.innerHTML = "";
+                } else if (day > daysInMonth) {
+                    cell.innerHTML = "";
+                } else {
+                    cell.innerHTML = day;
+                    cell.dataset.date = `${year}-${month + 1}-${day}`;
+                    
+                    if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                        cell.classList.add("today");
                         cell.style.backgroundColor = "#ffdd57";
                     }
-                });
-                if (this.classList.contains("today")) {
-                    this.style.backgroundColor = "#ffa500";
-                } else {
-                    this.style.backgroundColor = "#57a0ff";
+                    
+                    cell.addEventListener("click", function () {
+                        document.querySelectorAll(".calendar-cell").forEach(cell => {
+                            if (!cell.classList.contains("today")) {
+                                cell.style.backgroundColor = "";
+                            } else {
+                                cell.style.backgroundColor = "#ffdd57";
+                            }
+                        });
+                        if (this.classList.contains("today")) {
+                            this.style.backgroundColor = "#ffa500";
+                        } else {
+                            this.style.backgroundColor = "#57a0ff";
+                        }
+                    });
+                    
+                    day++;
                 }
-            });
-
-            row.appendChild(cell);
+                row.appendChild(cell);
+            }
+            table.appendChild(row);
         }
-        table.appendChild(row);
+
         calendarWrapper.appendChild(table);
         calendarContainer.appendChild(calendarWrapper);
     }
 
-    function generateContinuousWeeks() {
-        calendarContainer.innerHTML = "";
-        let startDate = new Date(currentWeekStart);
-        for (let i = -2; i <= 2; i++) {
-            let weekStart = new Date(startDate);
-            weekStart.setDate(startDate.getDate() + i * 7);
-            generateCalendarWeek(weekStart);
+    function changeMonth(offset) {
+        currentMonth += offset;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
         }
+        generateCalendar(currentYear, currentMonth);
     }
 
     document.addEventListener("wheel", function (event) {
-        event.preventDefault();
         if (event.deltaY > 0) {
-            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            changeMonth(1);
         } else if (event.deltaY < 0) {
-            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+            changeMonth(-1);
         }
-        generateContinuousWeeks();
-    }, { passive: false });
+    });
     
     document.addEventListener("click", function (event) {
         if (!event.target.classList.contains("calendar-cell")) {
@@ -106,5 +120,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    generateContinuousWeeks();
+    generateCalendar(currentYear, currentMonth);
 });
